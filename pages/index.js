@@ -2,6 +2,19 @@ import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { useEffect, useRef, useState } from "react";
 
+const MediaStreamHelper = async (facingMode = "user") => {
+	const options = {
+		audio: false,
+		video: {
+			facingMode,
+		},
+	};
+	return {
+		options,
+		stream: await navigator.mediaDevices.getUserMedia(options),
+	};
+};
+
 const Home = () => {
 	const video = useRef();
 	const pause = useRef();
@@ -14,6 +27,7 @@ const Home = () => {
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
 	const [screenshotSrc, setScreenshotSrc] = useState("");
 	const [err, setErr] = useState("");
+
 	useEffect(() => {
 		(async () => {
 			const supports = navigator.mediaDevices.getSupportedConstraints();
@@ -30,7 +44,7 @@ const Home = () => {
 		setLive(true);
 		setLoading(true);
 		const options = {
-			audio: false,
+			...MediaStreamHelper.options,
 			video: {
 				facingMode,
 			},
@@ -39,7 +53,7 @@ const Home = () => {
 		let stream;
 
 		try {
-			stream = await navigator.mediaDevices.getUserMedia(options);
+			stream = await MediaStreamHelper.stream;
 			const tracks = stream.getTracks();
 			tracks.forEach((track) => track.stop());
 			stream = await navigator.mediaDevices.getUserMedia(options);
