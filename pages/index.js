@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Home = () => {
 	const video = useRef();
@@ -15,30 +15,11 @@ const Home = () => {
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
 	const [screenshotSrc, setScreenshotSrc] = useState("");
 	const [err, setErr] = useState("");
-
-	const initialState = {
+	const [stream, setStream] = useState({
 		audio: false,
 		video: {
 			facingMode: "user",
 		},
-	};
-	const reducer = (state, action) => {
-		if (action.type === "switchMode") {
-			state = {
-				...state,
-				video: {
-					facingMode: select.current.value === "back" ? "environment" : "user",
-				},
-			};
-		}
-	};
-	const [state, dispatch] = useReducer(reducer, initialState, (param) => {
-		return {
-			audio: false,
-			video: {
-				facingMode: param,
-			},
-		};
 	});
 
 	useEffect(() => {
@@ -67,16 +48,10 @@ const Home = () => {
 			},
 		};
 
-		let stream;
-
 		try {
-			stream = await navigator.mediaDevices.getUserMedia(state);
 			const tracks = stream.getTracks();
 			tracks.forEach((track) => track.stop());
-			stream = await navigator.mediaDevices.getUserMedia(options);
-			dispatch({
-				payload: options,
-			});
+			setStream(await navigator.mediaDevices.getUserMedia(options));
 		} catch (e) {
 			setErr(`capture error: ${e.message}`);
 			return;
