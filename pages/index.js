@@ -1,15 +1,15 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "@/styles/Home.module.css";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export default function Home() {
+const Home = () => {
 	const video = useRef();
 	const pause = useRef();
 	const play = useRef();
 	const canvas = useRef();
 	const screenshot = useRef();
-	const [streaming, setStreaming] = useState(false);
+	// const [streaming, setStreaming] = useState(false);
 	const [devices, setDevices] = useState([]);
 	const [screenshotImageSrc, setScreenshotImageSrc] = useState("/");
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
@@ -39,8 +39,6 @@ export default function Home() {
 		})();
 	}, []);
 
-	let stream;
-
 	const capture = async (facingMode) => {
 		const options = {
 			audio: false,
@@ -50,18 +48,15 @@ export default function Home() {
 		};
 
 		try {
-			if (stream) {
+			navigator.mediaDevices.getUserMedia(options).then(async (stream) => {
 				const tracks = stream.getTracks();
 				tracks.forEach((track) => track.stop());
-			}
-			stream = await navigator.mediaDevices.getUserMedia(options);
+				video.current.srcObject = stream;
+				await video.current.play();
+			});
 		} catch (e) {
 			setErr(e.message);
-			return;
 		}
-		video.current.srcObject = null;
-		video.current.srcObject = stream;
-		await video.current.play();
 	};
 
 	const doScreenshot = () => {
@@ -175,4 +170,5 @@ export default function Home() {
 			</main>
 		</div>
 	);
-}
+};
+export default Home;
