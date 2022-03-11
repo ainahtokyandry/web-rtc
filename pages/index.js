@@ -13,6 +13,7 @@ export default function Home() {
 	const [devices, setDevices] = useState([]);
 	const [screenshotImageSrc, setScreenshotImageSrc] = useState("/");
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
+	const [status, setStatus] = useState("");
 
 	const selectChangeHandler = async (e) => {
 		let camera;
@@ -50,10 +51,11 @@ export default function Home() {
 			navigator.getUserMedia(
 				{ audio: false, video: true },
 				() => {
-					console.log("success");
+					setStatus("success");
 				},
 				(error) => {
 					console.error(error);
+					setStatus(error.message);
 				}
 			);
 			const devices = await navigator.mediaDevices.enumerateDevices();
@@ -99,6 +101,7 @@ export default function Home() {
 			</Head>
 
 			<main className={styles.main}>
+				<p>{status}</p>
 				<div className="display-cover">
 					<video ref={video} />
 					<canvas className="d-none" ref={canvas} />
