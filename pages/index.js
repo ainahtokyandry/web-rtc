@@ -15,12 +15,7 @@ const Home = () => {
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
 	const [screenshotSrc, setScreenshotSrc] = useState("");
 	const [err, setErr] = useState("");
-	const [stream, setStream] = useState({
-		audio: false,
-		video: {
-			facingMode: "user",
-		},
-	});
+	const [data, setData] = useState();
 
 	useEffect(() => {
 		(async () => {
@@ -48,10 +43,15 @@ const Home = () => {
 			},
 		};
 
+		let stream;
+
 		try {
-			const tracks = stream.getTracks();
-			tracks.forEach((track) => track.stop());
-			setStream(await navigator.mediaDevices.getUserMedia(options));
+			if (data) {
+				const tracks = stream.getTracks();
+				tracks.forEach((track) => track.stop());
+			}
+			stream = await navigator.mediaDevices.getUserMedia(options);
+			setData(stream);
 		} catch (e) {
 			setErr(`capture error: ${e.message}`);
 			return;
@@ -98,7 +98,7 @@ const Home = () => {
 			<main className={styles.main}>
 				<p>{err}</p>
 				<div className="display-cover">
-					<video ref={video} />
+					<video ref={video} autoPlay={true} />
 					<canvas className="d-none" ref={canvas} />
 					{showScreenshotImage && (
 						<img className={"screenshot-image"} src={screenshotSrc} alt="" />
