@@ -22,34 +22,13 @@ export default function Home() {
 		} else camera = "user";
 		await capture(camera);
 	};
-
-	const capture = async (facingMode) => {
-		setErr("");
-		const options = {
-			audio: false,
-			video: {
-				facingMode,
-			},
-		};
-
-		try {
-			navigator.mediaDevices
-				.getUserMedia(options)
-				.then(async (mediaStream) => {
-					const tracks = mediaStream.getTracks();
-					tracks.forEach((track) => track.stop());
-					video.current.srcObject = mediaStream;
-					await video.current.play();
-				})
-				.catch((e) => {
-					setErr(e.message);
-				});
-		} catch (e) {
-			return setErr(e.message);
-		}
-	};
 	useEffect(() => {
 		(async () => {
+			const supports = navigator.mediaDevices.getSupportedConstraints();
+			if (!supports["facingMode"]) {
+				alert("Browser Not supported!");
+				return;
+			}
 			try {
 				await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
 				const devices = await navigator.mediaDevices.enumerateDevices();
@@ -60,24 +39,29 @@ export default function Home() {
 		})();
 	}, []);
 
-	const playStream = async () => {
-		pause.current.classList.remove("d-none");
-		play.current.classList.add("d-none");
-		screenshot.current.classList.remove("d-none");
-		if (!streaming) {
-			setStreaming(true);
-			try {
-				const supports = navigator.mediaDevices.getSupportedConstraints();
-				if (!supports["facingMode"]) {
-					return setErr("Browser Not supported!");
-				}
-				await capture("user");
-			} catch (e) {
-				setErr(e.message);
+	let stream;
+
+	const capture = async (facingMode) => {
+		const options = {
+			audio: false,
+			video: {
+				facingMode,
+			},
+		};
+
+		try {
+			if (stream) {
+				const tracks = stream.getTracks();
+				tracks.forEach((track) => track.stop());
 			}
-		} else {
-			await video.current.play();
+			stream = await navigator.mediaDevices.getUserMedia(options);
+		} catch (e) {
+			setErr(e.message);
+			return;
 		}
+		video.current.srcObject = null;
+		video.current.srcObject = stream;
+		await video.current.play();
 	};
 
 	const doScreenshot = () => {
@@ -86,6 +70,13 @@ export default function Home() {
 		canvas.current.getContext("2d").drawImage(video.current, 0, 0);
 		setScreenshotImageSrc(canvas.current.toDataURL("image/webp"));
 		setShowScreenshotImage(true);
+	};
+
+	const playStream = async () => {
+		await capture("user");
+		pause.current.classList.remove("d-none");
+		play.current.classList.add("d-none");
+		screenshot.current.classList.remove("d-none");
 	};
 
 	const pauseStream = async () => {
