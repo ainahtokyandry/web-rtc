@@ -34,9 +34,11 @@ export default function Home() {
 		try {
 			navigator.mediaDevices
 				.getUserMedia(options)
-				.then((mediaStream) => {
+				.then(async (mediaStream) => {
 					const tracks = mediaStream.getTracks();
 					tracks.forEach((track) => track.stop());
+					video.current.srcObject = mediaStream;
+					await video.current.play();
 				})
 				.catch((e) => {
 					setErr(e.message);
@@ -44,8 +46,6 @@ export default function Home() {
 		} catch (e) {
 			return setErr(e.message);
 		}
-		video.current.srcObject = stream;
-		await video.current.play();
 	};
 	useEffect(() => {
 		(async () => {
