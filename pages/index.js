@@ -1,19 +1,6 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import { useEffect, useRef, useState } from "react";
-
-const MediaStreamHelper = async (facingMode = "user") => {
-	const options = {
-		audio: false,
-		video: {
-			facingMode,
-		},
-	};
-	return {
-		options,
-		stream: await navigator.mediaDevices.getUserMedia(options),
-	};
-};
+import { useEffect, useReducer, useRef, useState } from "react";
 
 const Home = () => {
 	const video = useRef();
@@ -21,12 +8,38 @@ const Home = () => {
 	const play = useRef();
 	const canvas = useRef();
 	const screenshot = useRef();
+	const select = useRef();
 	const [live, setLive] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [devices, setDevices] = useState([]);
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
 	const [screenshotSrc, setScreenshotSrc] = useState("");
 	const [err, setErr] = useState("");
+
+	const initialState = {
+		audio: false,
+		video: {
+			facingMode: "user",
+		},
+	};
+	const reducer = (state, action) => {
+		if (action.type === "switchMode") {
+			state = {
+				...state,
+				video: {
+					facingMode: select.current.value === "back" ? "environment" : "user",
+				},
+			};
+		}
+	};
+	const [state, dispatch] = useReducer(reducer, initialState, (param) => {
+		return {
+			audio: false,
+			video: {
+				facingMode: param,
+			},
+		};
+	});
 
 	useEffect(() => {
 		(async () => {
@@ -36,6 +49,10 @@ const Home = () => {
 			}
 			const devices = await navigator.mediaDevices.enumerateDevices();
 			setDevices(devices.filter((value) => value.deviceId.length > 0));
+			await capture("user");
+			play.current.classList.add("d-none");
+			pause.current.classList.remove("d-none");
+			screenshot.current.classList.remove("d-none");
 		})();
 	}, []);
 
@@ -44,7 +61,7 @@ const Home = () => {
 		setLive(true);
 		setLoading(true);
 		const options = {
-			...MediaStreamHelper.options,
+			audio: false,
 			video: {
 				facingMode,
 			},
@@ -53,10 +70,13 @@ const Home = () => {
 		let stream;
 
 		try {
-			stream = await MediaStreamHelper.stream;
+			stream = await navigator.mediaDevices.getUserMedia(state);
 			const tracks = stream.getTracks();
 			tracks.forEach((track) => track.stop());
 			stream = await navigator.mediaDevices.getUserMedia(options);
+			dispatch({
+				payload: options,
+			});
 		} catch (e) {
 			setErr(`capture error: ${e.message}`);
 			return;
@@ -68,16 +88,14 @@ const Home = () => {
 	};
 
 	const startLive = async () => {
-		await capture("user");
+		await video.current.play();
 		play.current.classList.add("d-none");
 		pause.current.classList.remove("d-none");
-		screenshot.current.classList.remove("d-none");
 	};
 	const pauseLive = async () => {
 		video.current.pause();
-		play.current.classList.add("d-none");
-		pause.current.classList.remove("d-none");
-		screenshot.current.classList.remove("d-none");
+		play.current.classList.remove("d-none");
+		pause.current.classList.add("d-none");
 	};
 
 	const takeScreenshot = () => {
@@ -113,7 +131,11 @@ const Home = () => {
 
 					{devices.length > 1 && (
 						<div className="video-options">
-							<select className="custom-select" onChange={selectChangeHandler}>
+							<select
+								className="custom-select"
+								onChange={selectChangeHandler}
+								ref={select}
+							>
 								<option value="">Select camera</option>
 								<option value="front">Front</option>
 								<option value="back">Back</option>
