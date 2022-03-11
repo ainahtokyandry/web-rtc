@@ -26,6 +26,7 @@ const Home = () => {
 	}, []);
 
 	const capture = async (facingMode) => {
+		setErr("");
 		setLive(true);
 		setLoading(true);
 		const options = {
@@ -40,7 +41,7 @@ const Home = () => {
 		try {
 			stream = await navigator.mediaDevices.getUserMedia(options);
 		} catch (e) {
-			setErr(e.message);
+			setErr(`capture error: ${e.message}`);
 			return;
 		}
 		video.current.srcObject = null;
@@ -95,12 +96,7 @@ const Home = () => {
 
 					{devices.length > 1 && (
 						<div className="video-options">
-							<select
-								name=""
-								id=""
-								className="custom-select"
-								onChange={selectChangeHandler}
-							>
+							<select className="custom-select" onChange={selectChangeHandler}>
 								<option value="">Select camera</option>
 								<option value="front">Front</option>
 								<option value="back">Back</option>
