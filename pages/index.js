@@ -39,6 +39,10 @@ const Home = () => {
 		let stream;
 
 		try {
+			if (stream) {
+				const tracks = stream.getTracks();
+				tracks.forEach((track) => track.stop());
+			}
 			stream = await navigator.mediaDevices.getUserMedia(options);
 		} catch (e) {
 			setErr(`capture error: ${e.message}`);
