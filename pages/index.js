@@ -29,8 +29,11 @@ const Home = () => {
 			}
 			try {
 				await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+				setErr("ligne 1");
 				const devices = await navigator.mediaDevices.enumerateDevices();
+				setErr("ligne 2");
 				setDevices(devices.filter((value) => value.deviceId.length > 0));
+				setErr("ligne 3");
 			} catch (e) {
 				setErr(`err #1 ${e.message}`);
 			}
@@ -46,10 +49,9 @@ const Home = () => {
 		};
 
 		try {
-			const stream = await navigator.mediaDevices.getUserMedia(options);
 			// const tracks = stream.getTracks();
 			// tracks.forEach((track) => track.stop());
-			video.current.srcObject = stream;
+			video.current.srcObject = await navigator.mediaDevices.getUserMedia(options);
 			if (video.current.paused) await video.current.play();
 		} catch (e) {
 			setErr(`err #3 ${e.message}`);
