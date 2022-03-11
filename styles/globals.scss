@@ -17,15 +17,13 @@ a {
 
 
 .screenshot-image {
-  width: 150px;
-  height: 90px;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 2px solid whitesmoke;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   position: absolute;
   bottom: 5px;
   left: 10px;
-  background: white;
+  display: flex;
 }
 
 .display-cover {
@@ -53,7 +51,6 @@ video {
   right: 20px;
   top: 20px;
   display: flex;
-
 }
 
 @media (min-width: 300px) and (max-width: 400px) {
