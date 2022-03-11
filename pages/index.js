@@ -47,6 +47,15 @@ export default function Home() {
 	};
 	useEffect(() => {
 		(async () => {
+			navigator.getUserMedia(
+				{ audio: false, video: true },
+				() => {
+					console.log("success");
+				},
+				(error) => {
+					console.error(error);
+				}
+			);
 			const devices = await navigator.mediaDevices.enumerateDevices();
 			setDevices(devices.filter((value) => value.deviceId.length > 0));
 		})();
