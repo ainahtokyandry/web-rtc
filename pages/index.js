@@ -1,13 +1,13 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
 	const video = useRef();
 	const pause = useRef();
 	const play = useRef();
 	const [streaming, setStreaming] = useState(false);
-	const [paused, setPaused] = useState(false);
+	const [devices, setDevices] = useState([]);
 
 	const selectChangeHandler = async (e) => {
 		let camera;
@@ -40,13 +40,18 @@ export default function Home() {
 		video.current.srcObject = stream;
 		await video.current.play();
 	};
+	useEffect(() => {
+		(async () => {
+			const devices = await navigator.mediaDevices.enumerateDevices();
+			setDevices(devices.filter((value) => value.deviceId.length > 0));
+		})();
+	}, []);
 
-	const playStream = async (e) => {
+	const playStream = async () => {
 		pause.current.classList.remove("d-none");
-		e.currentTarget.classList.add("d-none");
+		play.current.classList.add("d-none");
 		if (!streaming) {
 			setStreaming(true);
-			console.log(e.currentTarget);
 			const supports = navigator.mediaDevices.getSupportedConstraints();
 			if (!supports["facingMode"]) {
 				alert("Browser Not supported!");
@@ -54,13 +59,14 @@ export default function Home() {
 			}
 			await capture("user");
 		} else {
-			setPaused(false);
+			await video.current.play();
 		}
 	};
 
 	const pauseStream = async () => {
 		pause.current.classList.add("d-none");
 		play.current.classList.remove("d-none");
+		await video.current.pause();
 	};
 	return (
 		<div className={styles.container}>
@@ -74,18 +80,20 @@ export default function Home() {
 					<video autoPlay ref={video} />
 					<canvas className="d-none" />
 
-					<div className="video-options">
-						<select
-							name=""
-							id=""
-							className="custom-select"
-							onChange={selectChangeHandler}
-						>
-							<option value="">Select camera</option>
-							<option value="front">Front</option>
-							<option value="back">Back</option>
-						</select>
-					</div>
+					{devices.length > 1 && (
+						<div className="video-options">
+							<select
+								name=""
+								id=""
+								className="custom-select"
+								onChange={selectChangeHandler}
+							>
+								<option value="">Select camera</option>
+								<option value="front">Front</option>
+								<option value="back">Back</option>
+							</select>
+						</div>
+					)}
 
 					{/*<Image className="screenshot-image d-none" alt="" src={""} />*/}
 
