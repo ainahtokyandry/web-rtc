@@ -23,17 +23,25 @@ const Home = () => {
 	};
 	useEffect(() => {
 		(async () => {
-			const supports = navigator.mediaDevices.getSupportedConstraints();
-			if (!supports["facingMode"]) {
-				setErr("Browser Not supported!");
-			}
+			// const supports = navigator.mediaDevices.getSupportedConstraints();
+			// if (!supports["facingMode"]) {
+			// 	setErr("Browser Not supported!");
+			// }
+			// try {
+			// 	await navigator.mediaDevices.getUserMedia({
+			// 		audio: false,
+			// 		video: { facingMode: "user" },
+			// 	});
+			// 	setErr("ligne 1");
+			// 	const devices = await navigator.mediaDevices.enumerateDevices();
+			// 	setErr("ligne 2");
+			// 	setDevices(devices.filter((value) => value.deviceId.length > 0));
+			// 	setErr("ligne 3");
+			// } catch (e) {
+			// 	setErr(`err #1 ${e.message}`);
+			// }
 			try {
-				await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
-				setErr("ligne 1");
-				const devices = await navigator.mediaDevices.enumerateDevices();
-				setErr("ligne 2");
-				setDevices(devices.filter((value) => value.deviceId.length > 0));
-				setErr("ligne 3");
+				await capture("user");
 			} catch (e) {
 				setErr(`err #1 ${e.message}`);
 			}
@@ -58,30 +66,30 @@ const Home = () => {
 		}
 	};
 
-	const doScreenshot = () => {
-		canvas.current.width = video.current.videoWidth;
-		canvas.current.height = video.current.videoHeight;
-		canvas.current.getContext("2d").drawImage(video.current, 0, 0);
-		setScreenshotImageSrc(canvas.current.toDataURL("image/webp"));
-		setShowScreenshotImage(true);
-	};
-
-	const playStream = async () => {
-		try {
-			await capture("user");
-		} catch (e) {
-			setErr(`err #4 ${e.message}`);
-		}
-		pause.current.classList.remove("d-none");
-		play.current.classList.add("d-none");
-		screenshot.current.classList.remove("d-none");
-	};
-
-	const pauseStream = async () => {
-		pause.current.classList.add("d-none");
-		play.current.classList.remove("d-none");
-		video.current.pause();
-	};
+	// const doScreenshot = () => {
+	// 	canvas.current.width = video.current.videoWidth;
+	// 	canvas.current.height = video.current.videoHeight;
+	// 	canvas.current.getContext("2d").drawImage(video.current, 0, 0);
+	// 	setScreenshotImageSrc(canvas.current.toDataURL("image/webp"));
+	// 	setShowScreenshotImage(true);
+	// };
+	//
+	// const playStream = async () => {
+	// 	try {
+	// 		await capture("user");
+	// 	} catch (e) {
+	// 		setErr(`err #4 ${e.message}`);
+	// 	}
+	// 	pause.current.classList.remove("d-none");
+	// 	play.current.classList.add("d-none");
+	// 	screenshot.current.classList.remove("d-none");
+	// };
+	//
+	// const pauseStream = async () => {
+	// 	pause.current.classList.add("d-none");
+	// 	play.current.classList.remove("d-none");
+	// 	video.current.pause();
+	// };
 	return (
 		<div className={styles.container}>
 			<Head>
@@ -116,12 +124,8 @@ const Home = () => {
 					)}
 
 					<div className="controls">
-						<button
-							className="btn btn-danger play"
-							title="Play"
-							onClick={playStream}
-							ref={play}
-						>
+						<button className="btn btn-danger play" title="Play" ref={play}>
+							{/*onClick={playStream}*/}
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="60"
@@ -132,12 +136,8 @@ const Home = () => {
 								<path d="M30,0A30,30,0,1,0,60,30,30.034,30.034,0,0,0,30,0Zm0,58A28,28,0,1,1,58,30,28.032,28.032,0,0,1,30,58Z" />
 							</svg>
 						</button>
-						<button
-							className="btn btn-info pause d-none"
-							title="Pause"
-							ref={pause}
-							onClick={pauseStream}
-						>
+						<button className="btn btn-info pause d-none" title="Pause" ref={pause}>
+							{/*onClick={pauseStream}*/}
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="60"
@@ -153,8 +153,8 @@ const Home = () => {
 							className="btn btn-outline-success screenshot d-none"
 							title="ScreenShot"
 							ref={screenshot}
-							onClick={doScreenshot}
 						>
+							{/*onClick={doScreenshot}*/}
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="18"
