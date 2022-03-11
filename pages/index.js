@@ -24,7 +24,6 @@ export default function Home() {
 	};
 
 	const capture = async (facingMode) => {
-		let stream;
 		const options = {
 			audio: false,
 			video: {
@@ -43,8 +42,7 @@ export default function Home() {
 					setErr(e.message);
 				});
 		} catch (e) {
-			alert(e);
-			return;
+			return setErr(e.message);
 		}
 		video.current.srcObject = stream;
 		await video.current.play();
@@ -56,7 +54,6 @@ export default function Home() {
 				const devices = await navigator.mediaDevices.enumerateDevices();
 				setDevices(devices.filter((value) => value.deviceId.length > 0));
 			} catch (e) {
-				// setStatus(window.isSecureContext);
 				setErr(e.message);
 			}
 		})();
