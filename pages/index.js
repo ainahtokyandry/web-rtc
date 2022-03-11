@@ -14,7 +14,6 @@ const Home = () => {
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
 	const [screenshotSrc, setScreenshotSrc] = useState("");
 	const [err, setErr] = useState("");
-	const [stream, setStream] = useState("");
 	useEffect(() => {
 		(async () => {
 			const supports = navigator.mediaDevices.getSupportedConstraints();
@@ -37,12 +36,13 @@ const Home = () => {
 			},
 		};
 
+		let stream;
+
 		try {
-			if (stream) {
-				const tracks = stream.getTracks();
-				tracks.forEach((track) => track.stop());
-			}
-			setStream(await navigator.mediaDevices.getUserMedia(options));
+			stream = await navigator.mediaDevices.getUserMedia(options);
+			const tracks = stream.getTracks();
+			tracks.forEach((track) => track.stop());
+			stream = await navigator.mediaDevices.getUserMedia(options);
 		} catch (e) {
 			setErr(`capture error: ${e.message}`);
 			return;
