@@ -47,7 +47,7 @@ const Home = () => {
 
 		try {
 			if (data) {
-				const tracks = stream.getTracks();
+				const tracks = data.getTracks();
 				tracks.forEach((track) => track.stop());
 			}
 			stream = await navigator.mediaDevices.getUserMedia(options);
