@@ -24,6 +24,7 @@ export default function Home() {
 	};
 
 	const capture = async (facingMode) => {
+		setErr("");
 		const options = {
 			audio: false,
 			video: {
@@ -68,8 +69,7 @@ export default function Home() {
 			try {
 				const supports = navigator.mediaDevices.getSupportedConstraints();
 				if (!supports["facingMode"]) {
-					alert("Browser Not supported!");
-					return;
+					return setErr("Browser Not supported!");
 				}
 				await capture("user");
 			} catch (e) {
@@ -91,7 +91,7 @@ export default function Home() {
 	const pauseStream = async () => {
 		pause.current.classList.add("d-none");
 		play.current.classList.remove("d-none");
-		await video.current.pause();
+		video.current.pause();
 	};
 	return (
 		<div className={styles.container}>
