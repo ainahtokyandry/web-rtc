@@ -187,7 +187,9 @@ export default function Home() {
 				</main>
 			)}
 			{!status && (
-				<p>The page is not encrypted so I can't get permission to use the camera</p>
+				<p>
+					The page is not encrypted so I can{"'"}t get permission to use the camera
+				</p>
 			)}
 		</div>
 	);
