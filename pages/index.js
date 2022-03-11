@@ -54,7 +54,7 @@ export default function Home() {
 				const devices = await navigator.mediaDevices.enumerateDevices();
 				setDevices(devices.filter((value) => value.deviceId.length > 0));
 			} catch (e) {
-				setStatus(window.isSecureContext);
+				// setStatus(window.isSecureContext);
 				setErr(e.message);
 			}
 		})();
