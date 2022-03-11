@@ -9,7 +9,6 @@ const Home = () => {
 	const play = useRef();
 	const canvas = useRef();
 	const screenshot = useRef();
-	// const [streaming, setStreaming] = useState(false);
 	const [devices, setDevices] = useState([]);
 	const [screenshotImageSrc, setScreenshotImageSrc] = useState("/");
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
@@ -26,15 +25,14 @@ const Home = () => {
 		(async () => {
 			const supports = navigator.mediaDevices.getSupportedConstraints();
 			if (!supports["facingMode"]) {
-				alert("Browser Not supported!");
-				return;
+				setErr("Browser Not supported!");
 			}
 			try {
 				await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
 				const devices = await navigator.mediaDevices.enumerateDevices();
 				setDevices(devices.filter((value) => value.deviceId.length > 0));
 			} catch (e) {
-				setErr(e.message);
+				setErr(`err #1 ${e.message}`);
 			}
 		})();
 	}, []);
@@ -48,14 +46,13 @@ const Home = () => {
 		};
 
 		try {
-			navigator.mediaDevices.getUserMedia(options).then(async (stream) => {
-				const tracks = stream.getTracks();
-				tracks.forEach((track) => track.stop());
-				video.current.srcObject = stream;
-				await video.current.play();
-			});
+			const stream = await navigator.mediaDevices.getUserMedia(options);
+			// const tracks = stream.getTracks();
+			// tracks.forEach((track) => track.stop());
+			video.current.srcObject = stream;
+			if (video.current.paused) await video.current.play();
 		} catch (e) {
-			setErr(e.message);
+			setErr(`err #3 ${e.message}`);
 		}
 	};
 
@@ -68,7 +65,11 @@ const Home = () => {
 	};
 
 	const playStream = async () => {
-		await capture("user");
+		try {
+			await capture("user");
+		} catch (e) {
+			setErr(`err #4 ${e.message}`);
+		}
 		pause.current.classList.remove("d-none");
 		play.current.classList.add("d-none");
 		screenshot.current.classList.remove("d-none");
