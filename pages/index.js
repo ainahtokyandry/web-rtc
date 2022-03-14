@@ -18,6 +18,7 @@ const Home = () => {
 	const [err, setErr] = useState("");
 	const [data, setData] = useState();
 	const [scaled, setScaled] = useState(false);
+	const [defaultDevice, setDefaultDevice] = useState("");
 
 	useEffect(() => {
 		(async () => {
@@ -38,6 +39,7 @@ const Home = () => {
 			let devices = await navigator.mediaDevices.enumerateDevices();
 			devices = devices.filter((value) => value.kind === "videoinput");
 			setDevices(devices);
+			setDefaultDevice(devices[0].deviceId);
 			await capture(devices[0].deviceId);
 			play.current.classList.add("d-none");
 			pause.current.classList.remove("d-none");
@@ -131,6 +133,7 @@ const Home = () => {
 								className="custom-select"
 								onChange={selectChangeHandler}
 								ref={select}
+								defaultValue={defaultDevice}
 							>
 								<option value="">Select camera</option>
 								{devices.map(
