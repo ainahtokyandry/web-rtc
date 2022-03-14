@@ -125,29 +125,27 @@ const Home = () => {
 						</figure>
 					)}
 
-					{devices.length > 1 && (
-						<div className="video-options">
-							<select
-								className="custom-select"
-								onChange={selectChangeHandler}
-								ref={select}
-							>
-								<option value="">Select camera</option>
-								{devices.map(
-									(value, key) =>
-										value.label.length > 0 && (
-											<option
-												key={value.deviceId}
-												selected={key === 0}
-												value={value.deviceId}
-											>
-												{value.label}
-											</option>
-										)
-								)}
-							</select>
-						</div>
-					)}
+					<div className="video-options">
+						<select
+							className="custom-select"
+							onChange={selectChangeHandler}
+							ref={select}
+						>
+							<option value="">Select camera</option>
+							{devices.map(
+								(value, key) =>
+									value.label.length > 0 && (
+										<option
+											key={value.deviceId}
+											selected={key === 0}
+											value={value.deviceId}
+										>
+											{value.label}
+										</option>
+									)
+							)}
+						</select>
+					</div>
 					<div className="controls">
 						<button className="play" title="Play" ref={play} onClick={startLive}>
 							<Icons name={"play"} />

@@ -64,17 +64,17 @@ video {
 .controls {
   position: absolute;
   right: 20px;
-  top: 20px;
+  bottom: 20px;
   display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-@media (min-width: 300px) and (max-width: 400px) {
+@media (min-width: 768px) {
   .controls {
-    flex-direction: column;
-
-    button {
-      margin: 5px 0 !important;
-    }
+    top: 20px;
+    bottom: initial;
+    flex-direction: row;
   }
 }
 
