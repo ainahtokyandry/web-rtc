@@ -95,11 +95,7 @@ const Home = () => {
 	};
 
 	const selectChangeHandler = async (e) => {
-		let camera;
-		if (e.target.value === "back") {
-			camera = "environment";
-		} else camera = "user";
-		await capture(camera);
+		await capture(e.target.value);
 	};
 
 	return (
