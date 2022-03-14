@@ -44,15 +44,16 @@ const Home = () => {
 		})();
 	}, []);
 
-	const capture = async (facingMode) => {
+	const capture = async (deviceId) => {
 		setErr("");
 		setLive(true);
 		setLoading(true);
 		const options = {
 			audio: false,
-			video: true,
-			deviceId: {
-				exact: facingMode,
+			video: {
+				deviceId: {
+					exact: deviceId,
+				},
 			},
 		};
 
@@ -127,14 +128,13 @@ const Home = () => {
 								ref={select}
 							>
 								<option value="">Select camera</option>
-								{devices.map((value) =>
-									value.label.length > 0 ? (
-										<option key={value.deviceId} value={value.deviceId}>
-											{value.label}
-										</option>
-									) : (
-										<></>
-									)
+								{devices.map(
+									(value) =>
+										value.label.length > 0 && (
+											<option key={value.deviceId} value={value.deviceId}>
+												{value.label}
+											</option>
+										)
 								)}
 							</select>
 						</div>
