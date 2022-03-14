@@ -27,6 +27,7 @@ const Home = () => {
 					setErr("Browser Not supported!");
 				}
 			} catch (e) {
+				console.error(e.message);
 				setErr(
 					"Could not get persmission." +
 						"\nYou can add this website in the list of `Insecure origins treated as secure`" +
@@ -49,8 +50,9 @@ const Home = () => {
 		setLoading(true);
 		const options = {
 			audio: false,
-			video: {
-				facingMode,
+			video: true,
+			deviceId: {
+				exact: facingMode,
 			},
 		};
 
@@ -131,6 +133,11 @@ const Home = () => {
 								<option value="">Select camera</option>
 								<option value="front">Front</option>
 								<option value="back">Back</option>
+								{devices.map((value) => (
+									<option key={value.deviceId} value={value.deviceId}>
+										{value.label}
+									</option>
+								))}
 							</select>
 						</div>
 					)}
