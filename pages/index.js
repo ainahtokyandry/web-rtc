@@ -18,6 +18,7 @@ const Home = () => {
 	const [err, setErr] = useState("");
 	const [data, setData] = useState();
 	const [scaled, setScaled] = useState(false);
+	const [defaultDevice, setDefaultDevice] = useState("");
 
 	useEffect(() => {
 		(async () => {
@@ -38,6 +39,7 @@ const Home = () => {
 			let devices = await navigator.mediaDevices.enumerateDevices();
 			devices = devices.filter((value) => value.kind === "videoinput");
 			setDevices(devices);
+			setDefaultDevice(devices[0].deviceId);
 			await capture(devices[0].deviceId);
 			play.current.classList.add("d-none");
 			pause.current.classList.remove("d-none");
@@ -97,6 +99,7 @@ const Home = () => {
 	};
 
 	const selectChangeHandler = async (e) => {
+		setDefaultDevice(e.target.value);
 		await capture(e.target.value);
 	};
 
@@ -124,20 +127,19 @@ const Home = () => {
 							/>
 						</figure>
 					)}
-
-					<div className="video-options">
+					{devices.length > 1 && (
 						<select
-							className="custom-select"
+							className="video-options"
 							onChange={selectChangeHandler}
 							ref={select}
 						>
-							<option value="">Select camera</option>
+							<option value={defaultDevice}>Select camera</option>
 							{devices.map(
 								(value, key) =>
 									value.label.length > 0 && (
 										<option
 											key={value.deviceId}
-											selected={key === 0}
+											selected={defaultDevice === value.deviceId}
 											value={value.deviceId}
 										>
 											{value.label}
@@ -145,7 +147,7 @@ const Home = () => {
 									)
 							)}
 						</select>
-					</div>
+					)}
 					<div className="controls">
 						<button className="play" title="Play" ref={play} onClick={startLive}>
 							<Icons name={"play"} />
