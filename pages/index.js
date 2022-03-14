@@ -107,7 +107,7 @@ const Home = () => {
 				<meta name="description" content="Developed by ATA" />
 			</Head>
 			<main className={styles.main}>
-				<p className={"error"}>{err}</p>
+				{err.length > 0 && <p className={"error"}>{err}</p>}
 				<div className="display-cover">
 					<video className={scaled && "scale-effect"} ref={video} autoPlay={true} />
 					<canvas className="d-none" ref={canvas} />
