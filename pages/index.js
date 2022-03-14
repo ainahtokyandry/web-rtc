@@ -35,8 +35,9 @@ const Home = () => {
 				);
 			}
 
-			const devices = await navigator.mediaDevices.enumerateDevices();
-			setDevices(devices.filter((value) => value.label.length > 0));
+			let devices = await navigator.mediaDevices.enumerateDevices();
+			devices = devices.filter((value) => value.kind === "videoinput");
+			setDevices(devices);
 			await capture(devices[0].deviceId);
 			play.current.classList.add("d-none");
 			pause.current.classList.remove("d-none");
@@ -108,7 +109,11 @@ const Home = () => {
 			<main className={styles.main}>
 				{err.length > 0 && <p className={"error"}>{err}</p>}
 				<div className="display-cover">
-					<video className={scaled && "scale-effect"} ref={video} autoPlay={true} />
+					<video
+						className={scaled ? "scale-effect" : undefined}
+						ref={video}
+						autoPlay={true}
+					/>
 					<canvas className="d-none" ref={canvas} />
 					{showScreenshotImage && (
 						<figure className={"screenshot-image"}>
