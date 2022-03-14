@@ -25,7 +25,11 @@ const Home = () => {
 					setErr("Browser Not supported!");
 				}
 			} catch (e) {
-				setErr(e.message);
+				setErr(
+					"Could not get persmission." +
+						"\nYou can add this website in the list of `Insecure origins treated as secure`" +
+						"\nYou can go to chrome://flags/#unsafely-treat-insecure-origin-as-secure to do it"
+				);
 			}
 
 			const devices = await navigator.mediaDevices.enumerateDevices();
@@ -106,7 +110,9 @@ const Home = () => {
 					<video ref={video} autoPlay={true} />
 					<canvas className="d-none" ref={canvas} />
 					{showScreenshotImage && (
-						<img className={"screenshot-image"} src={screenshotSrc} alt="" />
+						<figure className={"screenshot-image"}>
+							<img src={screenshotSrc} alt="Screenshot" />
+						</figure>
 					)}
 
 					{devices.length > 1 && (
