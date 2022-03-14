@@ -36,8 +36,8 @@ const Home = () => {
 			}
 
 			const devices = await navigator.mediaDevices.enumerateDevices();
-			setDevices(devices.filter((value) => value.deviceId.length > 0));
-			await capture("user");
+			setDevices(devices.filter((value) => value.label.length > 0));
+			await capture(devices[0].deviceId);
 			play.current.classList.add("d-none");
 			pause.current.classList.remove("d-none");
 			screenshot.current.classList.remove("d-none");
@@ -131,13 +131,15 @@ const Home = () => {
 								ref={select}
 							>
 								<option value="">Select camera</option>
-								<option value="front">Front</option>
-								<option value="back">Back</option>
-								{devices.map((value) => (
-									<option key={value.deviceId} value={value.deviceId}>
-										{value.label}
-									</option>
-								))}
+								{devices.map((value) =>
+									value.label.length > 0 ? (
+										<option key={value.deviceId} value={value.deviceId}>
+											{value.label}
+										</option>
+									) : (
+										<></>
+									)
+								)}
 							</select>
 						</div>
 					)}
