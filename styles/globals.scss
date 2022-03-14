@@ -44,6 +44,10 @@ a {
   position: relative;
 }
 
+.scale-effect {
+  transform: scaleX(-1);
+}
+
 video {
   width: 100%;
   background: rgba(0, 0, 0, 0.2);
@@ -80,10 +84,8 @@ video {
   padding: 0;
 }
 
-.controls button:nth-child(1) {
+.controls button.play {
   border: 2px solid #D2002E;
-  display: flex;
-  align-items: center;
 
   &:hover {
     background-color: #D2002E;
@@ -106,10 +108,8 @@ video {
   }
 }
 
-.controls button:nth-child(2) {
+.controls button.pause {
   border: 2px solid #008496;
-  display: flex;
-  align-items: center;
 
   &:hover {
     background-color: #008496;
@@ -132,10 +132,8 @@ video {
   }
 }
 
-.controls button:nth-child(3) {
+.controls button.screenshot {
   border: 2px solid #00B541;
-  display: flex;
-  align-items: center;
 
   &:hover {
     background-color: #00B541;
@@ -165,6 +163,8 @@ video {
   border-radius: 100%;
   margin: 0 6px;
   background: transparent;
+  display: flex;
+  align-items: center;
 
   &:hover {
     svg {
