@@ -101,10 +101,10 @@ const Home = () => {
 	};
 
 	return (
-		<div className={styles.container}>
+		<>
 			<Head>
 				<title>Playing with web rtc</title>
-				<meta name="description" content="Developped by ATA" />
+				<meta name="description" content="Developed by ATA" />
 			</Head>
 			<main className={styles.main}>
 				<p className={"error"}>{err}</p>
@@ -160,7 +160,7 @@ const Home = () => {
 					</div>
 				</div>
 			</main>
-		</div>
+		</>
 	);
 };
 export default Home;
