@@ -186,24 +186,27 @@ const Home = () => {
 							spaceBetween={1}
 							modules={[Mousewheel, Pagination]}
 							mousewheel={true}
+							direction={width >= 768 ? "vertical" : "horizontal"}
 						>
 							{screenshotSrcList.length > 0 &&
-								screenshotSrcList.map((value, index) => {
-									return (
-										<SwiperSlide
-											key={index}
-											className={screenshotSrcList.length > 1 && index > 0 ? "ml-6 " : ""}
-										>
-											<figure>
-												<img
-													src={value}
-													alt="Screenshot"
-													className={scaled ? "scale-effect" : ""}
-												/>
-											</figure>
-										</SwiperSlide>
-									);
-								})}
+								screenshotSrcList.map((value, index) => (
+									<SwiperSlide
+										key={index}
+										className={
+											width < 768 && screenshotSrcList.length > 1 && index > 0
+												? "ml-6 "
+												: ""
+										}
+									>
+										<figure>
+											<img
+												src={value}
+												alt="Screenshot"
+												className={scaled ? "scale-effect" : ""}
+											/>
+										</figure>
+									</SwiperSlide>
+								))}
 						</Swiper>
 					</>
 				)}

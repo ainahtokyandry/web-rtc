@@ -49,14 +49,22 @@ body .swiper {
   width: 100%;
   margin-left: 0;
   margin-top: 6px;
+  @media (min-width: 768px) {
+    width: fit-content;
+    height: 100%;
+    margin-left: 6px;
+    margin-top: 0;
+  }
 
   &-slide {
-    width: 200px !important
+    width: 250px !important;
+    height: 150px;
   }
 }
 
 figure, img {
   margin: 0;
+  height: 100%;
 }
 
 img {
@@ -101,6 +109,10 @@ body .screenshot-image {
   justify-content: center;
   align-items: center;
   position: relative;
+  width: 100%;
+  @media (min-width: 768px) {
+    width: calc(100% - 250px);
+  }
 }
 
 .scale-effect {
@@ -109,7 +121,6 @@ body .screenshot-image {
 
 video {
   width: 100%;
-  background: rgba(0, 0, 0, 0.2);
   height: 100%;
 }
 
