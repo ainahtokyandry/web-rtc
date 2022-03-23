@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Icons from "@/components/Icons";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Mousewheel, Pagination } from "swiper";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -180,7 +181,12 @@ const Home = () => {
 				</div>
 				{showScreenshotImage && (
 					<>
-						<Swiper>
+						<Swiper
+							slidesPerView={"auto"}
+							spaceBetween={1}
+							modules={[Mousewheel, Pagination]}
+							mousewheel={true}
+						>
 							{screenshotSrcList.length > 0 &&
 								screenshotSrcList.map((value, index) => {
 									return (

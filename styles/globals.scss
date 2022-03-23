@@ -45,21 +45,29 @@ body .w-200 {
   width: 200px;
 }
 
-.swiper {
+body .swiper {
   width: 100%;
+  margin-left: 0;
+  margin-top: 6px;
 
   &-slide {
-    width: 200px;
+    width: 200px !important
   }
 }
 
 figure, img {
+  margin: 0;
+}
+
+img {
   width: 100%;
+  object-fit: cover;
 }
 
 .mb-6 {
   margin-bottom: 6px;
 }
+
 
 body .h-200 {
   height: 200px;
