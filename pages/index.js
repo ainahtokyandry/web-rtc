@@ -1,7 +1,15 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
+import styles from "@/styles/Home.module.scss";
 import { useEffect, useRef, useState } from "react";
 import Icons from "@/components/Icons";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import useWindowDimensions from "@/lib/useWindowDimensions";
 
 const Home = () => {
 	const video = useRef();
@@ -15,10 +23,12 @@ const Home = () => {
 	const [devices, setDevices] = useState([]);
 	const [showScreenshotImage, setShowScreenshotImage] = useState(false);
 	const [screenshotSrc, setScreenshotSrc] = useState("");
+	const [screenshotSrcList, setScreenshotSrcList] = useState([]);
 	const [err, setErr] = useState("");
 	const [data, setData] = useState();
 	const [scaled, setScaled] = useState(false);
 	const [defaultDevice, setDefaultDevice] = useState("");
+	const { width } = useWindowDimensions();
 
 	useEffect(() => {
 		(async () => {
@@ -95,6 +105,10 @@ const Home = () => {
 		canvas.current.height = video.current.videoHeight;
 		canvas.current.getContext("2d").drawImage(video.current, 0, 0);
 		setScreenshotSrc(canvas.current.toDataURL("image/webp"));
+		setScreenshotSrcList([
+			...screenshotSrcList,
+			canvas.current.toDataURL("image/webp"),
+		]);
 		setShowScreenshotImage(true);
 	};
 
@@ -118,15 +132,6 @@ const Home = () => {
 						autoPlay={true}
 					/>
 					<canvas className="d-none" ref={canvas} />
-					{showScreenshotImage && (
-						<figure className={"screenshot-image"}>
-							<img
-								src={screenshotSrc}
-								alt="Screenshot"
-								className={scaled && "scale-effect"}
-							/>
-						</figure>
-					)}
 					{devices.length > 1 && (
 						<select
 							className="video-options"
@@ -135,7 +140,7 @@ const Home = () => {
 						>
 							<option value={defaultDevice}>Select camera</option>
 							{devices.map(
-								(value, key) =>
+								(value) =>
 									value.label.length > 0 && (
 										<option
 											key={value.deviceId}
@@ -173,6 +178,29 @@ const Home = () => {
 						</button>
 					</div>
 				</div>
+				{showScreenshotImage && (
+					<>
+						<Swiper>
+							{screenshotSrcList.length > 0 &&
+								screenshotSrcList.map((value, index) => {
+									return (
+										<SwiperSlide
+											key={index}
+											className={screenshotSrcList.length > 1 && index > 0 ? "ml-6 " : ""}
+										>
+											<figure>
+												<img
+													src={value}
+													alt="Screenshot"
+													className={scaled ? "scale-effect" : ""}
+												/>
+											</figure>
+										</SwiperSlide>
+									);
+								})}
+						</Swiper>
+					</>
+				)}
 			</main>
 		</>
 	);
