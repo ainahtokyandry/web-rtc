@@ -186,14 +186,14 @@ const Home = () => {
 							spaceBetween={1}
 							modules={[Mousewheel, Pagination]}
 							mousewheel={true}
-							direction={width >= 768 ? "vertical" : "horizontal"}
+							direction={width >= 992 ? "vertical" : "horizontal"}
 						>
 							{screenshotSrcList.length > 0 &&
 								screenshotSrcList.map((value, index) => (
 									<SwiperSlide
 										key={index}
 										className={
-											width < 768 && screenshotSrcList.length > 1 && index > 0
+											width < 992 && screenshotSrcList.length > 1 && index > 0
 												? "ml-6 "
 												: ""
 										}
