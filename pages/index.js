@@ -126,7 +126,9 @@ const Home = () => {
 			</Head>
 			<main className={styles.main}>
 				{err.length > 0 && <p className={"error"}>{err}</p>}
-				<div className="display-cover">
+				<div
+					className={screenshotSrcList.length === 0 ? "w-100" : "" + "display-cover"}
+				>
 					<video
 						className={scaled ? "scale-effect" : undefined}
 						ref={video}
